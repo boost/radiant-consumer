@@ -43,7 +43,7 @@ namespace :doc do
     d.rdoc_dir = 'doc'
     d.main     = 'README.rdoc'
     d.title    = "#{plugin_name} API Docs (#{current_sha})"
-    d.rdoc_files.include('README', 'History.txt', 'License.txt', 'Todo.txt', 'lib/**/*.rb')
+    d.rdoc_files.include('README', 'lib/**/*.rb')
   end
 
   task :push => 'doc:build' do
