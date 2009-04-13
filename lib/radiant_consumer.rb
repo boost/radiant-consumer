@@ -1,20 +1,14 @@
 require 'open-uri'
 
 class RadiantConsumer < ActionController::Base
-  def self.options=(value)
-    @options = value
-  end
-
-  def self.options
-    @options || {}
-  end
+  cattr_accessor :options
 
   def self.instance
     @instance ||= RadiantConsumer.new(RadiantConsumer.options)
   end
 
   def initialize(options)
-    @options = options
+    @options = options || {}
   end
 
   def fetch_snippet(name)

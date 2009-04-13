@@ -41,7 +41,7 @@ namespace :doc do
 
   Rake::RDocTask.new(:build) do |d|
     d.rdoc_dir = 'doc'
-    d.main     = 'README.rdoc'
+    d.main     = 'README'
     d.title    = "#{plugin_name} API Docs (#{current_sha})"
     d.rdoc_files.include('README', 'lib/**/*.rb')
   end

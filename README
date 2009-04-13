@@ -38,7 +38,7 @@ And to fetch a page snippet:
 
   <%= radiant_snippet('snippet_name') %>
 
-== LICENSE:
+== LICENSE
 
 (The MIT License)
 
