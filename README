@@ -19,7 +19,7 @@ In your environment file or an initializer:
     :expire_after => 10.minutes
   }
 
-In the above example the content will be refetcehd every 10 minutes.
+In the above example the content will be refetched every 10 minutes.
 
 == USAGE
 
