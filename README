@@ -1,0 +1,39 @@
+= Radiant Consumer
+
+This is a plugin that allows importing content from radiant page parts or
+snippets into another Rails project.
+
+== INSTALL
+
+Requires RadiantConsumer extension to be installed in your radiant from
+git://github.com/boost/radiant-commodity.git
+
+ruby script/plugin install git://github.com/boost/radiant-consumer.git
+
+== CONFIGURATION
+
+In your environment file or an initializer:
+
+  RadiantConsumer.options = {
+    :radiant_url => 'http://radiant.example.com',
+    :expire_after => 10.minutes
+  }
+
+In the above example the content will be refetcehd every 10 minutes.
+
+== USAGE
+
+In your views you can import a page body using:
+
+  <%= radiant_page('about') %>
+
+This will fetch the page contents from http://radiant.example.com/about. The
+layout will not be included.
+
+To fetch a page part:
+
+  <%= radiant_page_part('about', 'footer') %>
+
+And to fetch a page snippet:
+
+  <%= radiant_snippet('snippet_name') %>

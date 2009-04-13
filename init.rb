@@ -1,2 +1,2 @@
-require 'radiant_import_helper'
-ActionView::Base.send(:include, RadiantImportHelper)
+require 'radiant_consumer_helper'
+ActionView::Base.send(:include, RadiantConsumerHelper)

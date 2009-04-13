@@ -1,6 +1,6 @@
 require 'open-uri'
 
-class RadiantImport < ActionController::Base
+class RadiantConsumer < ActionController::Base
   def self.options=(value)
     @options = value
   end
@@ -10,7 +10,7 @@ class RadiantImport < ActionController::Base
   end
 
   def self.instance
-    @instance ||= RadiantImport.new(RadiantImport.options)
+    @instance ||= RadiantConsumer.new(RadiantConsumer.options)
   end
 
   def initialize(options)
@@ -34,10 +34,13 @@ class RadiantImport < ActionController::Base
   def fetch(url)
     uri = @options[:radiant_url] + url
     last_cached = cache(uri) { Time.now.to_i }
+
     if @options[:expire_after] && Time.now.to_i > (last_cached + @options[:expire_after].to_i)
       cache_store.delete(ActiveSupport::Cache.expand_cache_key(uri, :controller))
       cache_store.delete(ActiveSupport::Cache.expand_cache_key([uri, last_cached], :controller))
+      last_cached = cache(uri) { Time.now.to_i }
     end
+
     cache([uri, last_cached]) { URI.parse(uri).read }
   end
 end
