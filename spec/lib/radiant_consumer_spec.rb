@@ -74,11 +74,10 @@ describe RadiantConsumer do
       time_now = Time.now
 
       Time.stub!(:now).and_return(time_ago)
-      @uri.should_receive(:read).and_return('cached example content')
+      @uri.should_receive(:read).once.and_return('cached example content')
       @consumer.fetch_page('name').should == 'cached example content'
 
       Time.stub!(:now).and_return(time_now)
-      @uri.should_not_receive(:read)
       @consumer.fetch_page('name').should == 'cached example content'
     end
 
