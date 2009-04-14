@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
   <head>
-    <title>File: README [radiant_consumer API Docs (355ad51)]</title>
+    <title>File: README [radiant_consumer API Docs (092b2e2)]</title>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
     <link href='../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
@@ -31,7 +31,7 @@
         </div>
         <div class='last-update'>
           Last Update:
-          <span class='datetime'>Tue Apr 14 15:21:28 +1200 2009</span>
+          <span class='datetime'>Tue Apr 14 15:57:36 +1200 2009</span>
         </div>
       </div>
       <div id='content'>
@@ -54,9 +54,30 @@
             <p>
             In your environment file or an initializer:
             </p>
-            <pre>RadiantConsumer.options = {&#x000A;  :radiant_url =&gt; 'http://radiant.example.com',&#x000A;  :expire_after =&gt; 10.minutes&#x000A;}</pre>
+            <pre>RadiantConsumer.options = {&#x000A;  :radiant_url =&gt; 'http://radiant.example.com',&#x000A;  :expire_after =&gt; 10.minutes,&#x000A;  :timeout =&gt; 5,&#x000A;  :test_content =&gt; &quot;Example content&quot;&#x000A;}</pre>
             <p>
-            In the above example any content will be refetched every 10 minutes.
+            Options:
+            </p>
+            <table>
+            <tr><td valign="top">:radiant_url:</td><td>The URL of the radiant installation. This should be the base URL.
+            
+            </td></tr>
+            <tr><td valign="top">:expire_after:</td><td>The amount of time, in seconds, to cache the fetched content before
+            fetching again.
+            
+            </td></tr>
+            <tr><td valign="top">:timeout:</td><td>The amount of time, in seconds, to timeout the request to fetch the
+            content.
+            
+            </td></tr>
+            <tr><td valign="top">:environment_content:</td><td>Content to return for an environment instead of actually fetching.
+            
+            </td></tr>
+            </table>
+            <p>
+            In the above example any content will be refetched every 10 minutes, and
+            the connection will timeout after 5 seconds. In the test environemnt all
+            helpers will return &#8220;Example content&#8221;.
             </p>
             <h2>USAGE</h2>
             <p>
