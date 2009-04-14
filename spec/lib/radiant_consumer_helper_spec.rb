@@ -12,17 +12,17 @@ describe RadiantConsumerController do
   end
 
   it 'should fetch a radiant page' do
-    @consumer.should_receive(:fetch_page).with('name')
+    @consumer.should_receive(:fetch_page).with('name', {})
     @controller.radiant_page('name')
   end
 
   it 'should fetch a radiant page part' do
-    @consumer.should_receive(:fetch_page_part).with('name', 'part')
+    @consumer.should_receive(:fetch_page_part).with('name', 'part', {})
     @controller.radiant_page_part('name', 'part')
   end
 
   it 'should fetch a radiant snippet' do
-    @consumer.should_receive(:fetch_snippet).with('name')
+    @consumer.should_receive(:fetch_snippet).with('name', {})
     @controller.radiant_snippet('name')
   end
 end

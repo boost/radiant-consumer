@@ -15,7 +15,8 @@ describe RadiantConsumer do
   describe 'instance' do
     before(:each) do
       @options = {
-        :radiant_url => 'http://example.com'
+        :radiant_url => 'http://example.com',
+        :expire_after => 0
       }
 
       @consumer = RadiantConsumer.new(@options)
@@ -27,6 +28,14 @@ describe RadiantConsumer do
         URI.should_receive(:parse).with('http://example.com/snippets/name').and_return(@uri)
         @uri.should_receive(:read)
         @consumer.fetch_snippet('name')
+      end
+
+      it 'should allow options' do
+        URI.should_receive(:parse).once.with('http://example.com/snippets/other_name').and_return(@uri)
+        @uri.should_receive(:read)
+
+        @consumer.fetch_snippet('name', :test_content => 'Example content').should == 'Example content'
+        @consumer.fetch_snippet('other_name')
       end
     end
 
