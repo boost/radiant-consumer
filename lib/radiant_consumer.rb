@@ -4,22 +4,37 @@ require 'timeout'
 class RadiantConsumer < ActionController::Base
   cattr_accessor :options
 
+  # Singleton instance of RadiantConsumer
   def self.instance
     @instance ||= RadiantConsumer.new(RadiantConsumer.options)
   end
 
+  # Create a new RadiantConsumer with options as a hash.
+  #
+  # Valid option values:
+  #   :radiant_url => The url of the radiant installation
+  #   :expires_after => Time in seconds that the content is cached for
+  #
+  # Example:
+  #   RadiantConsumer.new(
+  #     :radiant_url => 'http://example.com',
+  #     :expires_after => 10.minutes
+  #   )
   def initialize(options)
     @options = options || {}
   end
 
+  # Fetch a radiant snippet
   def fetch_snippet(name)
     fetch('/snippets/%s' % name)
   end
 
+  # Fetch a radiant page
   def fetch_page(name)
     fetch('/page/%s' % name)
   end
 
+  # Fetch a specifc page part on a radiant page
   def fetch_page_part(name, part)
     fetch('/page/%s/%s' % [name, part])
   end
@@ -67,9 +82,7 @@ class RadiantConsumer < ActionController::Base
 
   def cache_valid?(uri)
     last = last_cached(uri)
-    return false unless last
-    return false if Time.now.to_i > (last + @options[:expire_after].to_i)
-    return true
+    !(!last || Time.now.to_i > (last + @options[:expire_after].to_i))
   end
 
   def cache_key(key)
@@ -79,7 +92,7 @@ class RadiantConsumer < ActionController::Base
   def clear_cache(uri)
     if last_cached(uri)
       cache_store.delete(cache_key([uri, last_cached(uri)]))
-      cache_store.delete(uri)
+      cache_store.delete(cache_key(uri))
     end
   end
 end
