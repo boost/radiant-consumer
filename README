@@ -5,8 +5,8 @@ snippets into another Rails project.
 
 == INSTALL
 
-Requires RadiantConsumer extension to be installed in your radiant from
-git://github.com/boost/radiant-commodity.git
+Requires RadiantCommodity extension to be installed in your radiant from
+http://github.com/boost/radiant-commodity
 
 ruby script/plugin install git://github.com/boost/radiant-consumer.git
 
@@ -19,7 +19,7 @@ In your environment file or an initializer:
     :expire_after => 10.minutes
   }
 
-In the above example the content will be refetched every 10 minutes.
+In the above example any content will be refetched every 10 minutes.
 
 == USAGE
 
