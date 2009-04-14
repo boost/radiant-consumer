@@ -89,7 +89,7 @@ class RadiantConsumer < ActionController::Base
   # the expires_after time
   def cache_valid?(uri)
     last = last_cached(uri)
-    !(!last || Time.now.to_i > (last + @options[:expire_after].to_i))
+    (last && Time.now.to_i <= (last + @options[:expire_after].to_i))
   end
 
   # Generate a valid cache key
