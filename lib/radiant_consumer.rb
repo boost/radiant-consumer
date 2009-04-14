@@ -1,4 +1,5 @@
 require 'open-uri'
+require 'timeout'
 
 class RadiantConsumer < ActionController::Base
   cattr_accessor :options
@@ -27,14 +28,58 @@ class RadiantConsumer < ActionController::Base
 
   def fetch(url)
     uri = @options[:radiant_url] + url
-    last_cached = cache(uri) { Time.now.to_i }
 
-    if @options[:expire_after] && Time.now.to_i > (last_cached + @options[:expire_after].to_i)
-      cache_store.delete(ActiveSupport::Cache.expand_cache_key(uri, :controller))
-      cache_store.delete(ActiveSupport::Cache.expand_cache_key([uri, last_cached], :controller))
-      last_cached = cache(uri) { Time.now.to_i }
+    if cache_valid?(uri)
+      cached(uri)
+    else
+      content = ''
+
+      begin
+        Timeout::timeout(@options[:timeout] || 10) do
+          content = cache_content(uri, URI.parse(uri).read)
+        end
+      rescue Timeout::Error
+        clear_cache(uri)
+      end
+      
+      content
     end
+  end
 
-    cache([uri, last_cached]) { URI.parse(uri).read }
+  def cache_content(uri, content)
+    clear_cache(uri)
+
+    time = Time.now.to_i
+
+    cache_store.write(cache_key(uri), time)
+    cache_store.write(cache_key([uri, time]), content)
+    
+    content
+  end
+
+  def cached(uri)
+    cache_store.read(cache_key([uri, last_cached(uri)]))
+  end
+
+  def last_cached(uri)
+    cache_store.read(cache_key(uri)).to_i
+  end
+
+  def cache_valid?(uri)
+    last = last_cached(uri)
+    return false unless last
+    return false if Time.now.to_i > (last + @options[:expire_after].to_i)
+    return true
+  end
+
+  def cache_key(key)
+    ActiveSupport::Cache.expand_cache_key(key, :controller)
+  end
+
+  def clear_cache(uri)
+    if last_cached(uri)
+      cache_store.delete(cache_key([uri, last_cached(uri)]))
+      cache_store.delete(uri)
+    end
   end
 end

@@ -55,44 +55,45 @@ describe RadiantConsumer do
       }
 
       @consumer = RadiantConsumer.new(@options)
-      @uri = mock(:uri, :read => 'example content')
+      @store = ActiveSupport::Cache::MemoryStore.new
+      @consumer.stub!(:cache_store).and_return(@store)
+
+      @uri = mock(:uri)
       URI.stub!(:parse).and_return(@uri)
     end
 
-    describe 'uncached' do
-      it 'should cache the current time in the url key' do
-        Time.should_receive(:now).at_least(:twice).and_return(134)
-        @uri.should_receive(:read).and_return('example content')
+    it 'should cache the current time in the url key' do
+      time_now = Time.now
+      Time.should_receive(:now).at_least(:twice).and_return(time_now)
+      @uri.should_receive(:read).and_return('uncached example content')
+      @consumer.fetch_page('name').should == 'uncached example content'
+    end
 
-        @consumer.should_receive(:cache).with('http://example.com/page/name').and_yield.and_return(134)
-        @consumer.should_receive(:cache).with(['http://example.com/page/name', 134]).and_yield
-        @consumer.should_not_receive(:cache_store)
-        @consumer.fetch_page('name')
-      end
+    it 'should use the cached version if the last fetch was less than 10 minutes ago' do
+      time_ago = Time.now.to_i - 5.minutes
+      time_now = Time.now
 
-      it 'should use the cached version if the last fetch was less than 10 minutes ago' do
-        time_ago = Time.now.to_i - 5.minutes
-        @consumer.should_receive(:cache).with('http://example.com/page/name').and_return(time_ago)
-        @consumer.should_receive(:cache).with(['http://example.com/page/name', time_ago]).and_return('example content cached')
-        @consumer.fetch_page('name').should == 'example content cached'
-      end
+      Time.stub!(:now).and_return(time_ago)
+      @uri.should_receive(:read).and_return('cached example content')
+      @consumer.fetch_page('name').should == 'cached example content'
 
-      it 'should refetch if the last fetch was more than 10 minutes ago' do
-        time_now = Time.now.to_i
-        Time.stub!(:now).and_return(time_now)
-        time_ago = Time.now.to_i - 15.minutes
+      Time.stub!(:now).and_return(time_now)
+      @uri.should_not_receive(:read)
+      @consumer.fetch_page('name').should == 'cached example content'
+    end
 
-        mock_store = mock(:cache_store)
-        @consumer.should_receive(:cache).with('http://example.com/page/name').twice.and_return(time_ago, time_now)
-        @consumer.should_receive(:cache_store).twice.and_return(mock_store)
+    it 'should refetch if the last fetch was more than 10 minutes ago' do
+      time_now = Time.now.to_i
+      time_ago = Time.now.to_i - 15.minutes
 
-        mock_store.should_receive(:delete).with('controller/http://example.com/page/name/%d.0' % time_ago).once
-        mock_store.should_receive(:delete).with('controller/http://example.com/page/name').once
+      Time.stub!(:now).and_return(time_ago)
+      @uri.should_receive(:read).twice.and_return('cached example content', 'uncached example content')
+      @consumer.fetch_page('name').should == 'cached example content'
+      # Try again to make sure it is cached
+      @consumer.fetch_page('name').should == 'cached example content'
 
-        @consumer.should_receive(:cache).with(['http://example.com/page/name', time_now]).and_return('example content')
-        
-        @consumer.fetch_page('name').should == 'example content'
-      end
+      Time.stub!(:now).and_return(time_now)
+      @consumer.fetch_page('name').should == 'uncached example content'
     end
   end
 end
