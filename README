@@ -16,10 +16,20 @@ In your environment file or an initializer:
 
   RadiantConsumer.options = {
     :radiant_url => 'http://radiant.example.com',
-    :expire_after => 10.minutes
+    :expire_after => 10.minutes,
+    :timeout => 5,
+    :test_content => "Example content"
   }
 
-In the above example any content will be refetched every 10 minutes.
+Options:
+:radiant_url:: The URL of the radiant installation. This should be the base URL.
+:expire_after:: The amount of time, in seconds, to cache the fetched content before fetching again.
+:timeout:: The amount of time, in seconds, to timeout the request to fetch the content.
+:environment_content:: Content to return for an environment instead of actually fetching.
+
+In the above example any content will be refetched every 10 minutes, and the
+connection will timeout after 5 seconds. In the test environemnt all helpers
+will return "Example content".
 
 == USAGE
 

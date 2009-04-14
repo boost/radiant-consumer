@@ -47,6 +47,22 @@ describe RadiantConsumer do
     end
   end
 
+  describe 'environment content' do
+    it 'should always return content for an environment if set' do
+      cenv = RAILS_ENV
+      RAILS_ENV = "staging"
+
+      @consumer = RadiantConsumer.new(:staging_content => "Test content")
+      @consumer.fetch_page('anything').should == "Test content"
+      
+      RAILS_ENV = cenv
+    end
+  end
+
+  describe 'timeout' do
+
+  end
+
   describe 'caching' do
     before(:each) do
       @options = {

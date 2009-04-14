@@ -44,6 +44,10 @@ class RadiantConsumer < ActionController::Base
   # Fetch the contents at a url from the source or from the cache. Uses
   # the expires_after cache option to decide if the cache is valid.
   def fetch(url)
+    if content = @options[('%s_content' % RAILS_ENV).to_sym]
+      return content
+    end
+
     uri = @options[:radiant_url] + url
 
     if cache_valid?(uri)
@@ -55,7 +59,10 @@ class RadiantConsumer < ActionController::Base
         Timeout::timeout(@options[:timeout] || 10) do
           content = cache_content(uri, URI.parse(uri).read)
         end
-      rescue Timeout::Error
+      rescue Timeout::Error => e
+        logger.error "Couldn't fetch content from radiant: %s due to error: %s" % [url, e.message]
+      rescue Errno::ECONNREFUSED => e
+        logger.error "Couldn't fetch content from radiant: %s due to error: %s" % [url, e.message]
         clear_cache(uri)
       end
       
@@ -99,7 +106,7 @@ class RadiantConsumer < ActionController::Base
 
   # Clear cached content and time
   def clear_cache(uri)
-    if last_cached(uri)
+    if last_cached(uri) > 0
       cache_store.delete(cache_key([uri, last_cached(uri)]))
       cache_store.delete(cache_key(uri))
     end
