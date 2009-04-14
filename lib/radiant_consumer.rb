@@ -41,6 +41,8 @@ class RadiantConsumer < ActionController::Base
 
   private
 
+  # Fetch the contents at a url from the source or from the cache. Uses
+  # the expires_after cache option to decide if the cache is valid.
   def fetch(url)
     uri = @options[:radiant_url] + url
 
@@ -61,6 +63,7 @@ class RadiantConsumer < ActionController::Base
     end
   end
 
+  # Cache content, saving the content and the time the content was cached
   def cache_content(uri, content)
     clear_cache(uri)
 
@@ -72,23 +75,29 @@ class RadiantConsumer < ActionController::Base
     content
   end
 
+  # Return cached content
   def cached(uri)
     cache_store.read(cache_key([uri, last_cached(uri)]))
   end
 
+  # Return the time a url was cached
   def last_cached(uri)
     cache_store.read(cache_key(uri)).to_i
   end
 
+  # Test if the cache is valid, that it is cached and it was cached with
+  # the expires_after time
   def cache_valid?(uri)
     last = last_cached(uri)
     !(!last || Time.now.to_i > (last + @options[:expire_after].to_i))
   end
 
+  # Generate a valid cache key
   def cache_key(key)
     ActiveSupport::Cache.expand_cache_key(key, :controller)
   end
 
+  # Clear cached content and time
   def clear_cache(uri)
     if last_cached(uri)
       cache_store.delete(cache_key([uri, last_cached(uri)]))
