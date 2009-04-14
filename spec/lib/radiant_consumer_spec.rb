@@ -62,7 +62,7 @@ describe RadiantConsumer do
       URI.stub!(:parse).and_return(@uri)
     end
 
-    it 'should cache the current time in the url key' do
+    it 'should fetch the content from the source the first time' do
       time_now = Time.now
       Time.should_receive(:now).at_least(:twice).and_return(time_now)
       @uri.should_receive(:read).and_return('uncached example content')
