@@ -63,7 +63,13 @@ class RadiantConsumer < ActionController::Base
 
         begin
           Timeout::timeout(@options[:timeout] || 10) do
-            content = cache_content(uri, URI.parse(uri).read)
+            read_options = {}
+
+            if @options[:username]
+              read_options[:http_basic_authentication] = [@options[:username].to_s, @options[:password].to_s]
+            end
+
+            content = cache_content(uri, URI.parse(uri).read(read_options))
           end
         rescue Timeout::Error => e
           logger.error "Couldn't fetch content from radiant: %s due to error: %s" % [url, e.message]
