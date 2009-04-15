@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+  <head>
+    <title>File: README [radiant_consumer API Docs (94c718a)]</title>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <link href='../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
+    <script type='text/javascript'>
+      //<![CDATA[
+        function popupCode(url) {
+          window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+        }
+        
+        function toggleCode(id) {
+          var code = document.getElementById(id)
+        
+          code.style.display = code.style.display != 'block' ? 'block' : 'none'
+          return true
+        }
+        
+        // Make codeblocks hidden by default
+        document.writeln('<' + 'style type="text/css">.method .source pre { display: none }<\/style>')
+      //]]>
+    </script>
+  </head>
+  <body class='page'>
+    <div class='file' id='wrapper'>
+      <div class='header'>
+        <div class='name'>README</div>
+        <div class='paths'>
+          README
+        </div>
+        <div class='last-update'>
+          Last Update:
+          <span class='datetime'>Wed Apr 15 16:57:53 +1200 2009</span>
+        </div>
+      </div>
+      <div id='content'>
+        <div id='text'>
+          <div id='description'>
+            <h1>Radiant Consumer</h1>
+            <p>
+            This is a plugin that allows importing content from radiant page parts or
+            snippets into another Rails project.
+            </p>
+            <h2>INSTALL</h2>
+            <p>
+            Requires RadiantCommodity extension to be installed in your radiant from <a
+            href="http://github.com/boost/radiant-commodity">github.com/boost/radiant-commodity</a>
+            </p>
+            <p>
+            ruby script/plugin install git://github.com/boost/radiant-consumer.git
+            </p>
+            <h2>CONFIGURATION</h2>
+            <p>
+            In your environment file or an initializer:
+            </p>
+            <pre>RadiantConsumer.options = {&#x000A;  :radiant_url =&gt; 'http://radiant.example.com',&#x000A;  :expire_after =&gt; 10.minutes,&#x000A;  :timeout =&gt; 5,&#x000A;  :test_content =&gt; &quot;Example content&quot;&#x000A;}</pre>
+            <p>
+            Options:
+            </p>
+            <table>
+            <tr><td valign="top">:radiant_url:</td><td>The URL of the radiant installation. This should be the base URL.
+            
+            </td></tr>
+            <tr><td valign="top">:expire_after:</td><td>The amount of time, in seconds, to cache the fetched content before
+            fetching again.
+            
+            </td></tr>
+            <tr><td valign="top">:timeout:</td><td>The amount of time, in seconds, to timeout the request to fetch the
+            content.
+            
+            </td></tr>
+            <tr><td valign="top">:environment_content:</td><td>Content to return for an environment instead of actually fetching.
+            
+            </td></tr>
+            <tr><td valign="top">:username:</td><td>Will use basic authentication if set
+            
+            </td></tr>
+            <tr><td valign="top">:password:</td><td>Password for basic authentication
+            
+            </td></tr>
+            </table>
+            <p>
+            In the above example any content will be refetched every 10 minutes, and
+            the connection will timeout after 5 seconds. In the test environemnt all
+            helpers will return &#8220;Example content&#8221;.
+            </p>
+            <h2>USAGE</h2>
+            <p>
+            In your views you can import a page body using:
+            </p>
+            <pre>&lt;%= radiant_page('about') %&gt;</pre>
+            <p>
+            This will fetch the page contents from <a
+            href="http://radiant.example.com/about.">radiant.example.com/about.</a> The
+            layout will not be included.
+            </p>
+            <p>
+            To fetch a page part:
+            </p>
+            <pre>&lt;%= radiant_page_part('about', 'footer') %&gt;</pre>
+            <p>
+            And to fetch a page snippet:
+            </p>
+            <pre>&lt;%= radiant_snippet('snippet_name') %&gt;</pre>
+            <h2>LICENSE</h2>
+            <p>
+            (The MIT License)
+            </p>
+            <p>
+            Copyright &#169; 2009 Boost Limited <a
+            href="http://www.boost.co.nz">www.boost.co.nz</a>
+            </p>
+            <p>
+            Permission is hereby granted, free of charge, to any person obtaining a
+            copy of this software and associated documentation files (the
+            &#8216;Software&#8217;), to deal in the Software without restriction,
+            including without limitation the rights to use, copy, modify, merge,
+            publish, distribute, sublicense, and/or sell copies of the Software, and to
+            permit persons to whom the Software is furnished to do so, subject to the
+            following conditions:
+            </p>
+            <p>
+            The above copyright notice and this permission notice shall be included in
+            all copies or substantial portions of the Software.
+            </p>
+            <p>
+            THE SOFTWARE IS PROVIDED &#8216;AS IS&#8217;, WITHOUT WARRANTY OF ANY KIND,
+            EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+            MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+            NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+            DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+            OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+            USE OR OTHER DEALINGS IN THE SOFTWARE.
+            </p>
+          </div>
+          <div id='section'>
+          </div>
+        </div>
+      </div>
+      <div id='footer-push'></div>
+    </div>
+    <div id='footer'>
+      <a href="http://github.com/mislav/hanna/tree/master"><strong>Hanna</strong> RDoc template</a>
+    </div>
+  </body>
+</html>
