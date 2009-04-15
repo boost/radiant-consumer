@@ -30,17 +30,18 @@ class RadiantConsumer < ActionController::Base
     @options = options || {}
   end
 
-  # Fetch a radiant snippet
+  # Fetch a radiant snippet. Options will override any options passed to #new
   def fetch_snippet(name, options = {})
     fetch('/snippets/%s' % name, options)
   end
 
-  # Fetch a radiant page
+  # Fetch a radiant page. Options will override any options passed to #new
   def fetch_page(name, options = {})
     fetch('/page/%s' % name, options)
   end
 
-  # Fetch a specifc page part on a radiant page
+  # Fetch a specifc page part on a radiant page. Options will override any
+  # options passed to #new
   def fetch_page_part(name, part, options = {})
     fetch('/page/%s/%s' % [name, part], options)
   end

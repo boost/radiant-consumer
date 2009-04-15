@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang='en'>
   <head>
-    <title>: RadiantConsumer [radiant_consumer API Docs (355ad51)]</title>
+    <title>: RadiantConsumer [radiant_consumer API Docs (94c718a)]</title>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
     <link href='../rdoc-style.css' media='screen' rel='stylesheet' type='text/css'>
     <script type='text/javascript'>
@@ -90,17 +90,38 @@
                   <p>
                   Valid option values:
                   </p>
-                  <pre>:radiant_url =&gt; The url of the radiant installation&#x000A;:expires_after =&gt; Time in seconds that the content is cached for</pre>
+                  <table>
+                  <tr><td valign="top">:radiant_url:</td><td>The URL of the radiant installation. This should be the base URL.
+                  
+                  </td></tr>
+                  <tr><td valign="top">:expire_after:</td><td>The amount of time, in seconds, to cache the fetched content before
+                  fetching again.
+                  
+                  </td></tr>
+                  <tr><td valign="top">:timeout:</td><td>The amount of time, in seconds, to timeout the request to fetch the
+                  content.
+                  
+                  </td></tr>
+                  <tr><td valign="top">:environment_content:</td><td>Content to return for an environment instead of actually fetching.
+                  
+                  </td></tr>
+                  <tr><td valign="top">:username:</td><td>Will use basic authentication if set
+                  
+                  </td></tr>
+                  <tr><td valign="top">:password:</td><td>Password for basic authentication
+                  
+                  </td></tr>
+                  </table>
                   <p>
                   Example:
                   </p>
-                  <pre>RadiantConsumer.new(&#x000A;  :radiant_url =&gt; 'http://example.com',&#x000A;  :expires_after =&gt; 10.minutes&#x000A;)</pre>
+                  <pre>RadiantConsumer.new(&#x000A;  :radiant_url =&gt; 'http://example.com',&#x000A;  :expires_after =&gt; 10.minutes,&#x000A;  :timeout =&gt; 5,&#x000A;  :test_content =&gt; 'Example content'&#x000A;)</pre>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000002-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000002-source'><span class="ruby-comment cmt"># File lib/radiant_consumer.rb, line 23</span>&#x000A;  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">options</span>)&#x000A;    <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span> <span class="ruby-operator">||</span> {}&#x000A;  <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000002-source'><span class="ruby-comment cmt"># File lib/radiant_consumer.rb, line 29</span>&#x000A;  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">options</span>)&#x000A;    <span class="ruby-ivar">@options</span> = <span class="ruby-identifier">options</span> <span class="ruby-operator">||</span> {}&#x000A;  <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <h2>Public instance methods</h2>
@@ -108,54 +129,57 @@
                 <a name='M000004'>      </a>
                 <div class='synopsis'>
                   <span class='name'>fetch_page</span>
-                  <span class='arguments'>(name)</span>
+                  <span class='arguments'>(name, options = {})</span>
                 </div>
                 <div class='description'>
                   <p>
-                  Fetch a radiant page
+                  Fetch a radiant page. Options will override any options passed to <a
+                  href="RadiantConsumer.html#M000002">new</a>
                   </p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000004-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000004-source'><span class="ruby-comment cmt"># File lib/radiant_consumer.rb, line 33</span>&#x000A;  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">fetch_page</span>(<span class="ruby-identifier">name</span>)&#x000A;    <span class="ruby-identifier">fetch</span>(<span class="ruby-value str">'/page/%s'</span> <span class="ruby-operator">%</span> <span class="ruby-identifier">name</span>)&#x000A;  <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000004-source'><span class="ruby-comment cmt"># File lib/radiant_consumer.rb, line 39</span>&#x000A;  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">fetch_page</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span> = {})&#x000A;    <span class="ruby-identifier">fetch</span>(<span class="ruby-value str">'/page/%s'</span> <span class="ruby-operator">%</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span>)&#x000A;  <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-instance method' id='method-M000005'>
                 <a name='M000005'>      </a>
                 <div class='synopsis'>
                   <span class='name'>fetch_page_part</span>
-                  <span class='arguments'>(name, part)</span>
+                  <span class='arguments'>(name, part, options = {})</span>
                 </div>
                 <div class='description'>
                   <p>
-                  Fetch a specifc page part on a radiant page
+                  Fetch a specifc page part on a radiant page. Options will override any
+                  options passed to <a href="RadiantConsumer.html#M000002">new</a>
                   </p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000005-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000005-source'><span class="ruby-comment cmt"># File lib/radiant_consumer.rb, line 38</span>&#x000A;  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">fetch_page_part</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">part</span>)&#x000A;    <span class="ruby-identifier">fetch</span>(<span class="ruby-value str">'/page/%s/%s'</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">name</span>, <span class="ruby-identifier">part</span>])&#x000A;  <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000005-source'><span class="ruby-comment cmt"># File lib/radiant_consumer.rb, line 45</span>&#x000A;  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">fetch_page_part</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">part</span>, <span class="ruby-identifier">options</span> = {})&#x000A;    <span class="ruby-identifier">fetch</span>(<span class="ruby-value str">'/page/%s/%s'</span> <span class="ruby-operator">%</span> [<span class="ruby-identifier">name</span>, <span class="ruby-identifier">part</span>], <span class="ruby-identifier">options</span>)&#x000A;  <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
               <div class='public-instance method' id='method-M000003'>
                 <a name='M000003'>      </a>
                 <div class='synopsis'>
                   <span class='name'>fetch_snippet</span>
-                  <span class='arguments'>(name)</span>
+                  <span class='arguments'>(name, options = {})</span>
                 </div>
                 <div class='description'>
                   <p>
-                  Fetch a radiant snippet
+                  Fetch a radiant snippet. Options will override any options passed to <a
+                  href="RadiantConsumer.html#M000002">new</a>
                   </p>
                 </div>
                 <div class='source'>
                   <a class='source-toggle' href='#' onclick="toggleCode('M000003-source'); return false">
                     [show source]
                   </a>
-                  <pre id='M000003-source'><span class="ruby-comment cmt"># File lib/radiant_consumer.rb, line 28</span>&#x000A;  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">fetch_snippet</span>(<span class="ruby-identifier">name</span>)&#x000A;    <span class="ruby-identifier">fetch</span>(<span class="ruby-value str">'/snippets/%s'</span> <span class="ruby-operator">%</span> <span class="ruby-identifier">name</span>)&#x000A;  <span class="ruby-keyword kw">end</span></pre>
+                  <pre id='M000003-source'><span class="ruby-comment cmt"># File lib/radiant_consumer.rb, line 34</span>&#x000A;  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">fetch_snippet</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span> = {})&#x000A;    <span class="ruby-identifier">fetch</span>(<span class="ruby-value str">'/snippets/%s'</span> <span class="ruby-operator">%</span> <span class="ruby-identifier">name</span>, <span class="ruby-identifier">options</span>)&#x000A;  <span class="ruby-keyword kw">end</span></pre>
                 </div>
               </div>
             </div>
