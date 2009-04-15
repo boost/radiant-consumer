@@ -26,6 +26,8 @@ Options:
 :expire_after:: The amount of time, in seconds, to cache the fetched content before fetching again.
 :timeout:: The amount of time, in seconds, to timeout the request to fetch the content.
 :environment_content:: Content to return for an environment instead of actually fetching.
+:username:: Will use basic authentication if set
+:password:: Password for basic authentication
 
 In the above example any content will be refetched every 10 minutes, and the
 connection will timeout after 5 seconds. In the test environemnt all helpers

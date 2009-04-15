@@ -12,8 +12,12 @@ class RadiantConsumer < ActionController::Base
   # Create a new RadiantConsumer with options as a hash.
   #
   # Valid option values:
-  #   :radiant_url => The url of the radiant installation
-  #   :expires_after => Time in seconds that the content is cached for
+  # :radiant_url:: The URL of the radiant installation. This should be the base URL.
+  # :expire_after:: The amount of time, in seconds, to cache the fetched content before fetching again.
+  # :timeout:: The amount of time, in seconds, to timeout the request to fetch the content.
+  # :environment_content:: Content to return for an environment instead of actually fetching.
+  # :username:: Will use basic authentication if set
+  # :password:: Password for basic authentication
   #
   # Example:
   #   RadiantConsumer.new(
