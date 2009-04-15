@@ -1,9 +1,13 @@
 ENV["RAILS_ENV"] ||= "test"
-require File.join(File.dirname(__FILE__), "../../../../config/environment")
-require 'spec'
-require 'spec/rails'
 
-Spec::Runner.configure do |config|
-  config.use_transactional_fixtures = true
-  config.use_instantiated_fixtures  = false
+unless defined? RAILS
+  require 'rubygems'
 end
+
+unless defined? RAILS_ENV
+  RAILS_ENV = ENV["RAILS_ENV"]
+end
+
+require 'spec'
+require 'action_controller'
+require 'action_controller/caching'

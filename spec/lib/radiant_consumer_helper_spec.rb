@@ -1,4 +1,5 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '../spec_helper'))
+require 'lib/radiant_consumer_helper'
 
 class RadiantConsumerController
   include RadiantConsumerHelper

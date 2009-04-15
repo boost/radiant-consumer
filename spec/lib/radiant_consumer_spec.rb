@@ -1,4 +1,5 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '../spec_helper'))
+require 'lib/radiant_consumer'
 
 describe RadiantConsumer do
   before(:each) do
@@ -20,6 +21,8 @@ describe RadiantConsumer do
       }
 
       @consumer = RadiantConsumer.new(@options)
+      @consumer.stub!(:cache_store).and_return(ActiveSupport::Cache::MemoryStore.new)
+
       @uri = mock(:uri)
     end
 
@@ -80,16 +83,15 @@ describe RadiantConsumer do
       }
 
       @consumer = RadiantConsumer.new(@options)
-      @store = ActiveSupport::Cache::MemoryStore.new
-      @consumer.stub!(:cache_store).and_return(@store)
+      @consumer.stub!(:cache_store).and_return(ActiveSupport::Cache::MemoryStore.new)
 
-      @uri = mock(:uri)
+      @uri = mock(:uri, :read => 'original example content')
       URI.stub!(:parse).and_return(@uri)
     end
 
     it 'should fetch the content from the source the first time' do
       time_now = Time.now
-      Time.should_receive(:now).at_least(:twice).and_return(time_now)
+      Time.should_receive(:now).at_least(:once).and_return(time_now)
       @uri.should_receive(:read).and_return('uncached example content')
       @consumer.fetch_page('name').should == 'uncached example content'
     end
