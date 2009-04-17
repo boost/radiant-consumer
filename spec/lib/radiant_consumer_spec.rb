@@ -17,7 +17,7 @@ describe RadiantConsumer do
     before(:each) do
       @options = {
         :radiant_url => 'http://example.com',
-        :expire_after => 0
+        :expires_after => 0
       }
 
       @consumer = RadiantConsumer.new(@options)
@@ -75,11 +75,42 @@ describe RadiantConsumer do
 
   end
 
+  describe 'errors' do
+    before(:each) do
+      @uri = mock(:uri)
+      URI.stub!(:parse).and_return(@uri)
+      @uri.stub!(:read).once.and_raise("any exception")
+    end
+
+    it 'should raise an error if raise_error is set and an error occurs' do
+      @options = {
+        :radiant_url => 'http://example.com',
+        :raise_errors => true
+      }
+
+      @consumer = RadiantConsumer.new(@options)
+      @consumer.stub!(:cache_store).and_return(ActiveSupport::Cache::MemoryStore.new)
+
+      lambda { @consumer.fetch_page('name') }.should raise_error("any exception")
+    end
+
+    it 'should not raise an error if raise_error is not set and an error occurs' do
+      @options = {
+        :radiant_url => 'http://example.com'
+      }
+
+      @consumer = RadiantConsumer.new(@options)
+      @consumer.stub!(:cache_store).and_return(ActiveSupport::Cache::MemoryStore.new)
+
+      lambda { @consumer.fetch_page('name') }.should_not raise_error
+    end
+  end
+
   describe 'caching' do
     before(:each) do
       @options = {
         :radiant_url => 'http://example.com',
-        :expire_after => 10.minutes
+        :expires_after => 10.minutes
       }
 
       @consumer = RadiantConsumer.new(@options)

@@ -28,6 +28,19 @@ class RadiantConsumer < ActionController::Base
   #   )
   def initialize(options)
     @options = options || {}
+    verify_options
+  end
+
+  def verify_options
+    valid_keys = %w(radiant_url expires_after timeout raise_errors error_content)
+
+    @options.keys.each do |key|
+      unless valid_keys.include?(key.to_s)
+        if key.to_s !~ /\s*_content/
+          raise ArgumentError.new("Invalid argument %s" % key.to_s)
+        end
+      end
+    end
   end
 
   # Fetch a radiant snippet. Options will override any options passed to #new
@@ -76,11 +89,16 @@ class RadiantConsumer < ActionController::Base
 
             content = cache_content(uri, URI.parse(uri).read(read_options))
           end
-        rescue Timeout::Error => e
-          logger.error "Couldn't fetch content from radiant: %s due to error: %s" % [url, e.message]
-        rescue Errno::ECONNREFUSED => e
-          logger.error "Couldn't fetch content from radiant: %s due to error: %s" % [url, e.message]
-          clear_cache(uri)
+        rescue Exception => e
+          logger.error "Couldn't fetch content from radiant: %s due to error: %s" % [url, e.message] if logger
+
+          if @options[:error_content]
+            content = @options[:error_content]
+          else
+            content = nil
+          end
+
+          fail if @options[:raise_errors] == true
         end
       
         content
@@ -116,7 +134,7 @@ class RadiantConsumer < ActionController::Base
   # expires_after time
   def cache_valid?(uri)
     last = last_cached(uri)
-    (last > 0 && Time.now.to_i <= (last + @options[:expire_after].to_i))
+    (last > 0 && Time.now.to_i <= (last + @options[:expires_after].to_i))
   end
 
   # Generate a valid cache key
