@@ -18,13 +18,17 @@ class RadiantConsumer < ActionController::Base
   # :environment_content:: Content to return for an environment instead of actually fetching.
   # :username:: Will use basic authentication if set
   # :password:: Password for basic authentication
+  # :error_content:: Content to return if an error occurs while fetching from radiant (like a page doesn't exist)
+  # :raise_errors:: If true any errors the occur during the fetch will be raised. Otherwise they will fail silently
   #
   # Example:
   #   RadiantConsumer.new(
   #     :radiant_url => 'http://example.com',
   #     :expires_after => 10.minutes,
   #     :timeout => 5,
-  #     :test_content => 'Example content'
+  #     :test_content => 'Example content',
+  #     :error_content => "An error occured",
+  #     :raise_errors => false
   #   )
   def initialize(options)
     @options = options || {}

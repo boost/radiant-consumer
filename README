@@ -28,6 +28,8 @@ Options:
 :environment_content:: Content to return for an environment instead of actually fetching.
 :username:: Will use basic authentication if set
 :password:: Password for basic authentication
+:error_content:: Content to return if an error occurs while fetching from radiant (like a page doesn't exist)
+:raise_errors:: If true any errors the occur during the fetch will be raised. Otherwise they will fail silently
 
 In the above example any content will be refetched every 10 minutes, and the
 connection will timeout after 5 seconds. In the test environemnt all helpers
