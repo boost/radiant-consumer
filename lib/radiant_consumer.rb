@@ -2,11 +2,28 @@ require 'open-uri'
 require 'timeout'
 
 class RadiantConsumer < ActionController::Base
-  cattr_accessor :options
+  cattr_reader :options
 
   # Singleton instance of RadiantConsumer
   def self.instance
     @instance ||= RadiantConsumer.new(RadiantConsumer.options)
+  end
+
+  def self.options=(value)
+    verify_options(value)
+    @@options = value
+  end
+
+  def self.verify_options(options)
+    valid_keys = %w(radiant_url expires_after timeout raise_errors error_content username password)
+
+    options.keys.each do |key|
+      unless valid_keys.include?(key.to_s)
+        if key.to_s !~ /\s*_content/
+          raise ArgumentError.new("Invalid argument %s" % key.to_s)
+        end
+      end
+    end
   end
 
   # Create a new RadiantConsumer with options as a hash.
@@ -32,19 +49,7 @@ class RadiantConsumer < ActionController::Base
   #   )
   def initialize(options)
     @options = options || {}
-    verify_options
-  end
-
-  def verify_options
-    valid_keys = %w(radiant_url expires_after timeout raise_errors error_content username password)
-
-    @options.keys.each do |key|
-      unless valid_keys.include?(key.to_s)
-        if key.to_s !~ /\s*_content/
-          raise ArgumentError.new("Invalid argument %s" % key.to_s)
-        end
-      end
-    end
+    self.class.verify_options(@options)
   end
 
   # Fetch a radiant snippet. Options will override any options passed to #new
@@ -70,6 +75,7 @@ class RadiantConsumer < ActionController::Base
   def fetch(url, options = {})
     @default_options = @options
     @options = @options.merge(options)
+    self.class.verify_options(@options)
 
     begin
       if content = @options[('%s_content' % RAILS_ENV).to_sym]
