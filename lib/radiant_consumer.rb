@@ -36,7 +36,7 @@ class RadiantConsumer < ActionController::Base
   end
 
   def verify_options
-    valid_keys = %w(radiant_url expires_after timeout raise_errors error_content)
+    valid_keys = %w(radiant_url expires_after timeout raise_errors error_content username password)
 
     @options.keys.each do |key|
       unless valid_keys.include?(key.to_s)
